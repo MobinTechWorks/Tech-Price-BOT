@@ -4,7 +4,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 
 # توکن ربات
 TOKEN = "7811956303:AAEO-2JJnClU-1ac5JeMUpSotz80LZLYd3w"
@@ -13,9 +13,19 @@ bot = telebot.TeleBot(TOKEN)
 # تابع گرفتن قیمت‌ها
 def get_prices():
     try:
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-        driver.get("https://www.bonbast.com/")
+        # تنظیمات Chrome برای حالت headless (بدون UI)
+        options = Options()
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.binary_location = '/usr/bin/chromium'
 
+        driver = webdriver.Chrome(
+            service=Service('/usr/bin/chromedriver'),
+            options=options
+        )
+
+        driver.get("https://www.bonbast.com/")
         wait = WebDriverWait(driver, 10)
 
         prices = {}
